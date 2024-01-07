@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import Home from "./pages/home";
-import { AddNotes } from "./pages/addNotes.jsx";
+import { AddNotes } from "./pages/AddNotes'
 import { AddLogs} from "./pages/AddLogs.jsx";
 import { Logs } from "./pages/Logs.jsx";
 import { ShowNote } from "./pages/ShowNotes.jsx";
