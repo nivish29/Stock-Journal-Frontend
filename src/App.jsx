@@ -2,10 +2,10 @@ import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import Home from "./pages/home";
-import { AddNotes } from "./pages/addNotes";
-import { AddLogs} from "./pages/AddLogs";
-import { Logs } from "./pages/Logs";
-import { ShowNote } from "./pages/ShowNotes";
+import { AddNotes } from "./pages/addNotes.jsx";
+import { AddLogs} from "./pages/AddLogs.jsx";
+import { Logs } from "./pages/Logs.jsx";
+import { ShowNote } from "./pages/ShowNotes.jsx";
 
 function App() {
   const lc = useLocation();
