@@ -109,7 +109,7 @@ export const ShowNoteComp = ({ today, setToday, currentDate }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/journal/getJournalByMonth?date=${date}`
+        `https://stock-journal-backend.onrender.com/api/journal/getJournalByMonth?date=${date}`
       );
       const result = await response.json();
 

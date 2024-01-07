@@ -139,92 +139,15 @@ const exportData = () => {
 };
 
 
-  // const exportData = () => {
-  //   const doc = new jsPDF();
-  //   const headers = createHeaders([
-  //     "Symbol",
-  //     "Position Size",
-  //     "Position Size %",
-  //     "RPT",
-  //     "RPT %",
-  //     "Exit %",
-  //     "Exit Price",
-  //     "Gain %",
-  //     "Account Gain %",
-  //     "ROI%",
-  //     "Days",
-  //     "RR",
-  //     "Charges",
-  //     "Net Profit",
-  //   ]);
-  //   // doc.autoTable(doc, { html: '#table' })
-  //   const tableData = data.map(row=>({...row,
-  //     Symbol:row.Symbol.toString(),
-  //     PositionSize:row['Position Size'].toString(),
-  //     PositionSizePercentage:row['Position Size %'].toString(),
-  //     RPT:row.RPT.toString(),
-  //     RPTPercentage:row['RPT %'].toString(),
-  //     ExitPercentage:row['Exit %'].toString(),
-  //     ExitPrice:row['Exit Price'].toString(),
-  //     GainPercentage:row['Gain %'].toString(),
-  //     AccountGainPercentage:row['Account Gain %'].toString(),
-  //     ROIPercentage:row['ROI%'].toString(),
-  //     Days:row.Days.toString(),
-  //     RR:row.RR.toString(),
-  //     Charges:row.Charges.toString(),
-  //     NetProfit:row['Net Profit'].toString()
-
-  //   }))
-
-  //   console.log({tableData})
-  //   // doc.table(1, 1, tableData, headers, { autoSize: true });
-  //   const columnWidths = {
-  //     Symbol: 20,
-  //     'Position Size': 20,
-  //     'Position Size %': 20,
-  //     RPT: 20,
-  //     'RPT %': 20,
-  //     'Exit %': 20,
-  //     'Exit Price': 20,
-  //     'Gain %': 20,
-  //     'Account Gain %': 20,
-  //     'ROI%': 20,
-  //     Days: 20,
-  //     RR: 20,
-  //     Charges: 20,
-  //     'Net Profit': 20,
-  //   };
-  
-  //   doc.autoTable({
-  //     head: [headers.map(header => header.name)],
-  //     body: tableData.map(row => Object.values(row)),
-  //     startY: 20,
-  //     theme: "plain",
-  //     styles: {
-  //       overflow: "linebreak",
-  //     },
-  //     columnStyles: {
-  //       ...columnWidths,
-  //     },
-  //   });
-  //   // console.log('nihal');
-    
-  //   doc.save("data.pdf");
-  // };
-
   const componentPDF = useRef();
 
-  // const exportData=useReactToPrint({
-  //   content : ()=>componentPDF.current,
-  //   documentTitle:'userData',
-  //   onAfterPrint:()=>alert("Data saved in PDF")
-  // })
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/journal/getAllJournals"
+          "https://stock-journal-backend.onrender.com/api/journal/getAllJournals"
         );
         // console.log(response.json());
         const result = await response.json();

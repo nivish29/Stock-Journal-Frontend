@@ -55,7 +55,7 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
 
   const addJournal = async () => {
     // e.preventDefault();
-    const url = "http://localhost:5000/api/journal/addJournal";
+    const url = "https://stock-journal-backend.onrender.com/api/journal/addJournal";
     // console.log()
     const data = {
       Title: title,
