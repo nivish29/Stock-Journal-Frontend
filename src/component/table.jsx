@@ -26,7 +26,7 @@ const DataTable = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {data.filter(entry => entry.Symbol).map((entry, index) =>(
+            {data.filter(entry => entry.Symbol && entry["Position Size"] && entry["Net Profit"]).map((entry, index) =>(
               
               <tr key={index} className='text-center'>
                 <td className="py-2 px-4 border rounded-lg border-black text-[12px]">{entry.Date}</td>

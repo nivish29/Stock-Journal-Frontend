@@ -4,8 +4,9 @@ import dayjs from "dayjs";
 import { generateDate, months } from "../utils/calender";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
-export const AddNoteComp = ({ today, setToday, currentDate }) => {
+export const UpdateNoteComp = ({ today, setToday, currentDate }) => {
   const navigate = useNavigate();
 
   const weekDays = [
@@ -68,61 +69,7 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
   const decodedToken = decodeToken(token);
   const userId = decodedToken._id;
 
-  const addJournal = async () => {
-    // e.preventDefault();
-    // const userId=localStorage.getItem('token');
-    console.log(userId);
-    const url =
-      "https://stock-journal-backend.onrender.com/api/journal/addJournal";
-    // console.log()
-    const data = {
-      Title: title,
-      Tag: tag,
-      Thoughts: content,
-      Link: link,
-      Date: `${today.date()}-${today.month() + 1}-${today.year()}`,
-      Symbol: "",
-      "Position Size": "",
-      "Position Size %": "",
-      RPT: "",
-      "RPT %": "",
-      "Exit %": "",
-      "Exit Price": "",
-      "Gain %": "",
-      "Account Gain %": "",
-      "ROI%": "",
-      Days: "",
-      RR: "",
-      Charges: "",
-      "Net Profit": "",
-      userId: userId,
-    };
-    // console.log(data);
 
-    try {
-      setLoading(true);
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const responseData = await response.json();
-      setStatus(responseData.status);
-
-      setResponseMessage(responseData.message);
-
-      setLoading(false);
-      document.getElementById("my_modal_3").close()
-    } catch (error) {
-      setStatus("Error");
-      setStatus(0);
-      console.error("Error:", error);
-      setResponseMessage("Error occurred while making the request.");
-    }
-  };
 
   const MAX_TITLE_LENGTH = 80;
   // const MAX_TAG_LENGTH = 8;
@@ -151,12 +98,11 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
 
       const timeoutId = setTimeout(() => {
         setShowToast(false);
-        setStatus(0)
+        setStatus(0);
       }, 2000);
-     
+
       return () => clearTimeout(timeoutId);
     }
-    
   }, [status]);
 
   useEffect(() => {
@@ -168,10 +114,41 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
     });
   }, [title, tag, content, link]);
 
-
   const location = useLocation();
   const editData = location.state.editData;
-  console.log(editData)
+  console.log(editData);
+
+  useEffect(() => {
+    if (editData) {
+      setTitle(editData.entry.Title || "");
+      setTag(editData.entry.Tag || "");
+      setContent(editData.entry.Thoughts || "");
+      setLink(editData.entry.Link || "");
+    }
+  }, [editData]);
+
+  const updateJournal = async () => {
+    try {
+      const response = await axios.put(
+        `https://stock-journal-backend.onrender.com/api/journal/updateJournalEntry?id=${editData._id}`,
+        {
+          // Replace with the actual ID of the journal entry
+          Title: title,
+          Tag: tag,
+          Thoughts: content,
+          Link: link,
+        }
+      );
+      console.log(response.data);
+
+      setStatus(response.data.status);
+      setResponseMessage(response.data.message);
+    } catch (error) {
+      console.error("Error updating journal entry:", error);
+      setStatus(0);
+      setResponseMessage("Error occurred while making the request.");
+    }
+  };
 
   return (
     <div className="">
@@ -182,7 +159,7 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
             <GrFormPrevious className="w-6 h-6 relative top-1"></GrFormPrevious>
           </div>
           <h1 className="text-2xl text-gray-900 tracking-wide font-[700]">
-            Add Note
+            Update Note
           </h1>
           <h1 className="text-[16px] text-gray-900 font-[500] mt-[6px]">
             {weekDays[curr.day(today.date()).day() % 7]}, {today.date()}{" "}
@@ -317,22 +294,31 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
                       <button
                         className="btn mr-4"
                         onClick={() => {
-                          addJournal();
+                          updateJournal();
                         }}
                       >
-                        Submit without log
+                        Update without log
                       </button>
                     )}
                     <button
                       className="btn border-black"
                       onClick={() => {
                         console.log(`Note data to be passed: ${link}`);
-                        navigate("/add-log", {
-                          state: { id: 1, noteData: allData },
+                        navigate("/update-log", {
+                          state: {
+                            id: 1,
+                            editData: editData,
+                            others:{
+                                Title: title,
+                              Tag: tag,
+                              Thoughts: content,
+                              Link: link,
+                            }
+                          },
                         });
                       }}
                     >
-                      Add Log
+                      Update Log
                     </button>
                   </div>
                 </div>

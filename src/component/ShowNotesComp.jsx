@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import { generateDate, months } from "../utils/calender";
 import { useNavigate, useLocation } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export const ShowNoteComp = ({ today, setToday, currentDate }) => {
   const navigate = useNavigate();
@@ -18,6 +20,22 @@ export const ShowNoteComp = ({ today, setToday, currentDate }) => {
     "Friday",
     "Saturday",
   ];
+
+  const decodeToken = (token) => {
+    try {
+      const decoded = jwtDecode(token);
+      return decoded;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
+
+  const [deleteStatus, setDeleteStatus] = useState(null);
+
+  const token = localStorage.getItem("token");
+  const decodedToken = decodeToken(token);
+  const userId = decodedToken._id;
 
   const curr = dayjs();
   const daysInMonth = curr.daysInMonth();
@@ -74,6 +92,7 @@ export const ShowNoteComp = ({ today, setToday, currentDate }) => {
   const [content, setContent] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   // const [clicked, setClicked] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -105,11 +124,42 @@ export const ShowNoteComp = ({ today, setToday, currentDate }) => {
 
   const [linkArray, SetLinkArray] = useState([]);
 
+  const handleDelete = async (journalId) => {
+    try {
+      setLoadingDelete(true);
+      const response = await axios.delete(
+        `https://stock-journal-backend.onrender.com/api/journal/deleteJournalEntry?id=${journalId}&userId=${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Include your authentication token if required
+            // 'Authorization': `Bearer ${yourAuthToken}`
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setLoadingDelete(false);
+        console.log("deleted");
+        window.location.reload();
+        document.getElementById("my_modal_3").close();
+        setDeleteStatus("success");
+      } else {
+        setLoadingDelete(false);
+        setDeleteStatus("error");
+      }
+    } catch (error) {
+      setLoadingDelete(false);
+      console.error("Error deleting journal entry:", error);
+      setDeleteStatus("error");
+    }
+  };
+
   const fetchData = async (date) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://stock-journal-backend.onrender.com/api/journal/getJournalByMonth?date=${date}`
+        `https://stock-journal-backend.onrender.com/api/journal/getJournalByMonth?date=${date}&userId=${userId}`
       );
       const result = await response.json();
 
@@ -245,13 +295,94 @@ export const ShowNoteComp = ({ today, setToday, currentDate }) => {
                 <div
                   className={`flex flex-col gap-y-4 pb-12 ${
                     index === currentIndex ? "visible" : "hidden"
-                  }`}
+                  } `}
+                  // onClick={()=>{console.log(entry._id)}}
                   id={index}
                   key={index}
                 >
                   <div className="flex">
-                    <h1 className="font-semibold">Title:&nbsp;</h1>
-                    <h1>{entry.Title}</h1>
+                    <div className="flex">
+                      {" "}
+                      <h1 className="font-semibold">Title:&nbsp;</h1>
+                      <h1>{entry.Title}</h1>
+                    </div>
+                    {loadingDelete && (
+                      <span className="loading loading-dots flex ml-auto bg-red-500 items-center loading-md"></span>
+                    )}
+                    {!loadingDelete && (
+                      <div
+                        className="flex ml-auto cursor-pointer text-red-600 "
+                        onClick={() => {
+                          // handleDelete(entry._id);
+                          document.getElementById("my_modal_3").showModal();
+                        }}
+                      >
+                        Delete
+                      </div>
+                    )}
+                    <div
+                      className="pl-4 cursor-pointer"
+                      onClick={() => {
+                        navigate("/update-note", {
+                          state: {
+                            id: 1,
+                            editData: {
+                              entry:entry
+                              // _id:entry._id,
+                              // title: entry.Title,
+                              // tag: entry.Tag,
+                              // content: entry.Thoughts,
+                              // // date: `${date["$D"]}-${date["$M"] + 1}-${date["$y"]}`,
+                              // link: entry.Link,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      Edit
+                    </div>
+                    <dialog
+                      id="my_modal_3"
+                      className="modal"
+                      onClick={() => {
+                        // document.getElementById("my_modal_3").close();
+                      }}
+                    >
+                      <div className="modal-box">
+                        <form method="dialog">
+                          {/* if there is a button in form, it will close the modal */}
+                          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                            ✕
+                          </button>
+                        </form>
+                        <h3 className="font-bold text-lg">Warning!</h3>
+                        <p className="py-5">Do you want to delete this note?</p>
+                        <div className="flex justify-end">
+                          {loadingDelete && (
+                            <span className="loading loading-dots items-center loading-lg bg-gray-500 mr-12"></span>
+                          )}
+
+                          {!loadingDelete && (
+                            <button
+                              className="btn mr-4 px-8"
+                              onClick={() => {
+                                handleDelete(entry._id);
+                              }}
+                            >
+                              Yes
+                            </button>
+                          )}
+                          <button
+                            className="btn border-black px-8"
+                            onClick={() => {
+                              document.getElementById("my_modal_3").close();
+                            }}
+                          >
+                            No
+                          </button>
+                        </div>
+                      </div>
+                    </dialog>
                   </div>
                   <div className="flex">
                     <h1 className="font-semibold">Tag:&nbsp;</h1>

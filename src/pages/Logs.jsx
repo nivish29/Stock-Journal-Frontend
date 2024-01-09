@@ -11,6 +11,7 @@ import DataTable from "../component/table";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useReactToPrint } from "react-to-print";
+import { jwtDecode } from "jwt-decode";
 // import { data } from "../utils/data";
 export const Logs = () => {
   const [open, setOpen] = useState(false);
@@ -141,18 +142,30 @@ const exportData = () => {
 
   const componentPDF = useRef();
 
+  const decodeToken = (token) => {
+    try {
+      const decoded = jwtDecode(token);
+      return decoded;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
 
-
+  const token=localStorage.getItem("token")
+    const decodedToken=decodeToken(token)
+    const userId=decodedToken._id;
+console.log(userId)
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://stock-journal-backend.onrender.com/api/journal/getAllJournals"
+          `https://stock-journal-backend.onrender.com/api/journal/getAllJournals?userId=${userId}`
         );
-        // console.log(response.json());
+        
         const result = await response.json();
-
-        setData(result.reverse());
+        console.log(result);
+        setData(result.data.reverse());
         setTimeout(() => {
           setLoading(false);
         }, 1000);

@@ -4,16 +4,16 @@ import dayjs from "dayjs";
 import { generateDate, months } from "../utils/calender";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
-export const AddLogsComp = ({ today, setToday, currentDate }) => {
+export const UpdateLogsComp = ({ today, setToday, currentDate }) => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const noteData = location.state.noteData;
-  console.log(noteData["link"]);
-  // console.log(
-  //   `from note ${noteData.tag},${noteData.title},${noteData.content}`
-  // );
+  const editData = location.state.editData;
+  const others = location.state.others;
+  console.log(editData.entry)
+  console.log(others)
 
   const weekDays = [
     "Sunday",
@@ -39,85 +39,81 @@ export const AddLogsComp = ({ today, setToday, currentDate }) => {
   const decodedToken = decodeToken(token);
   const userId = decodedToken._id;
 
-  const [symbol, setSymbol] = useState("");
-  const [positionSize, setPositionSize] = useState("");
-  const [positionSizePercentage, setPositionSizePercentage] = useState("");
-  const [rpt, setRpt] = useState("");
-  const [rptPercentage, setRptPercentage] = useState("");
-  const [exitPercentage, setExitPercentage] = useState("");
-  const [exitPrice, setExitPrice] = useState("");
-  const [gainPercentage, setGainPercentage] = useState("");
-  const [accountGainPercentage, setAccountGainPercentage] = useState("");
-  const [roiPercentage, setRoiPercentage] = useState("");
-  const [days, setDays] = useState("");
-  const [rr, setRr] = useState("");
-  const [charges, setCharges] = useState("");
-  const [netProfit, setNetProfit] = useState("");
+  const [symbol, setSymbol] = useState(editData.entry.Symbol);
+  const [positionSize, setPositionSize] = useState(
+    editData.entry["Position Size"]
+  );
+  const [positionSizePercentage, setPositionSizePercentage] = useState(
+    editData.entry["Position Size %"]
+  );
+  const [rpt, setRpt] = useState(editData.entry["RPT"]);
+  const [rptPercentage, setRptPercentage] = useState(editData.entry["RPT %"]);
+  const [exitPercentage, setExitPercentage] = useState(
+    editData.entry["Exit %"]
+  );
+  const [exitPrice, setExitPrice] = useState(editData.entry["Exit Price"]);
+  const [gainPercentage, setGainPercentage] = useState(
+    editData.entry["Gain %"]
+  );
+  const [accountGainPercentage, setAccountGainPercentage] = useState(
+    editData.entry["Account Gain %"]
+  );
+  const [roiPercentage, setRoiPercentage] = useState(editData.entry["ROI%"]);
+  const [days, setDays] = useState(editData.entry["Days"]);
+  const [rr, setRr] = useState(editData.entry["RR"]);
+  const [charges, setCharges] = useState(editData.entry["Charges"]);
+  const [netProfit, setNetProfit] = useState(editData.entry["Net Profit"]);
   const [responseMessage, setResponseMessage] = useState("");
   const [status, setStatus] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const addJournal = async (e) => {
+  const updateJournal = async (e) => {
     e.preventDefault();
-    const url =
-      "https://stock-journal-backend.onrender.com/api/journal/addJournal";
-    // console.log()
-    const data = {
-      Title: noteData.title,
-      Tag: noteData.tag,
-      Thoughts: noteData.content,
-      Link: noteData.link,
-      Date: `${today.date()}-${today.month() + 1}-${today.year()}`,
-      Symbol: symbol,
-      "Position Size": positionSize,
-      "Position Size %": positionSizePercentage,
-      RPT: rpt,
-      "RPT %": rptPercentage,
-      "Exit %": exitPercentage,
-      "Exit Price": exitPrice,
-      "Gain %": gainPercentage,
-      "Account Gain %": accountGainPercentage,
-      "ROI%": roiPercentage,
-      Days: days,
-      RR: rr,
-      Charges: charges,
-      "Net Profit": netProfit,
-      userId: userId,
-    };
-    // console.log(data);
-
     try {
-      setLoading(true);
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await axios.put(
+        `https://stock-journal-backend.onrender.com/api/journal/updateJournalEntry?id=${editData.entry._id}`,
+        {
+          // Replace with the actual ID of the journal entry
+          Title: others.Title,
+          Tag: others.Tag,
+          Thoughts:others.Thoughts,
+          Link: others.Link,
+          Symbol: symbol,
+          "Position Size": positionSize,
+          "Position Size %": positionSizePercentage,
+          RPT: rpt,
+          "RPT %": rptPercentage,
+          "Exit %": exitPercentage,
+          "Exit Price": exitPrice,
+          "Gain %": gainPercentage,
+          "Account Gain %": accountGainPercentage,
+          "ROI%": roiPercentage,
+          Days: days,
+          RR: rr,
+          Charges: charges,
+          "Net Profit": netProfit,
+          userId: userId,
+        }
+      );
+      console.log(response.data);
 
-      const responseData = await response.json();
-      setStatus(responseData.status);
-      setResponseMessage(responseData.message);
-      setLoading(false);
+      setStatus(response.data.status);
+      setResponseMessage(response.data.message);
     } catch (error) {
-      setStatus("Error");
+      console.error("Error updating journal entry:", error);
       setStatus(0);
-      console.error("Error:", error);
       setResponseMessage("Error occurred while making the request.");
     }
   };
 
   useEffect(() => {
     if (status === 1) {
-
       const timeoutId = setTimeout(() => {
-        setStatus(0)
+        setStatus(0);
       }, 2000);
-     
+
       return () => clearTimeout(timeoutId);
     }
-    
   }, [status]);
 
   return (
@@ -272,7 +268,7 @@ export const AddLogsComp = ({ today, setToday, currentDate }) => {
                 </div> */}
                 {/* <div className="h-[0.6px] w-full mb-7 bg-gray-200"></div> */}
               </form>
-              <form action="" className="w-full" onSubmit={addJournal}>
+              <form action="" className="w-full" onSubmit={updateJournal}>
                 <div className=" flex ">
                   <div className="flex mt-[5px]">
                     <h1 className="">Position Size :</h1>

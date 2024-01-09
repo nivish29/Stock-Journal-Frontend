@@ -8,6 +8,8 @@ import { ShowNote } from "./pages/ShowNotes";
 import { AddNotes } from "./pages/AddNotes";
 import { Login } from "./pages/Login";
 import { SignUp } from "./pages/Signup";
+import { UpdateNotes } from "./pages/UpdateNotes";
+import { UpdateLogs } from "./pages/UpdateLogs";
 
 function App() {
   const location = useLocation();
@@ -29,6 +31,8 @@ function App() {
               <Route path="/logs" element={<Logs />} />
               <Route path="/add-log" element={<AddLogs />} />
               <Route path="/note" element={<ShowNote />} />
+              <Route path="/update-note" element={<UpdateNotes />} />
+              <Route path="/update-log" element={<UpdateLogs />} />
             </>
           ) : (
             <>
