@@ -1,16 +1,41 @@
 import { useState } from "react";
 import authPageImg from "./../assets/authPage_img.jpg";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const SignUp = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+//   const [username, setUsername] = useState("");
+//   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    //   const userData = { username, role: 'user' };
-    //   onLogin(userData);
+  const [data,setData]=useState({
+    firstName:"",
+    lastName:"",
+    email:"",
+    password:"",
+  })
+  const [loading,setLoading]=useState(false);
+  const handleChange = ({currentTarget:input}) => {
+    setData({...data,[input.name]:input.value})
+
   };
+const [error,setError]=useState("")
+  const handleSubmit=async(e)=>{
+    e.preventDefault();
+    try{
+        setLoading(true)
+        const url="https://stock-journal-backend.onrender.com/api/journal/auth/signup"
+        const {data:res} = await axios.post(url,data);
+        navigate('/')
+        console.log(res.message)
+        setLoading(false)
+    }catch(e){
+        setLoading(false)
+        if(e.response && e.response.status>=400 && e.response.status<=500){
+            setError(e.response.data.message)
+        }
+    }
+  }
 
   return (
     <div className="overflow-y-hidden">
@@ -34,16 +59,17 @@ export const SignUp = () => {
             <div className="text-[17px] py-4 font-thin w-[25rem] text-stone-200">
               Unlock your financial journey – Log your stocks, track your
               success!
-            </div><form className="m-auto flex flex-col">
+            </div><form className="m-auto flex flex-col" onSubmit={handleSubmit}>
             <div className="flex border-b border-white mt-5 text-white">
               <label className="flex w-full font-thin text-[18px]">
                 First Name:
                 <input
                   className="outline-none font-normal pl-2 pb-2 bg-transparent"
                   type="text"
+                  name="firstName"
                   placeholder=""
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={data.firstName}
+                  onChange={handleChange}
                 />
               </label>
             </div>
@@ -53,9 +79,10 @@ export const SignUp = () => {
                 <input
                   className="outline-none font-normal pl-2 pb-2 bg-transparent"
                   type="text"
+                  name="lastName"
                   placeholder=""
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={data.lastName}
+                  onChange={handleChange}
                 />
               </label>
             </div>
@@ -65,9 +92,10 @@ export const SignUp = () => {
                 <input
                   className="outline-none font-normal pl-2 pb-2 bg-transparent"
                   type="text"
+                    name="email"
                   placeholder=""
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={data.email}
+                  onChange={handleChange}
                 />
               </label>
             </div>
@@ -77,18 +105,20 @@ export const SignUp = () => {
                 <input
                   className="outline-none font-normal pl-2 pb-2 bg-transparent"
                   type="text"
+                    name="password"
                   placeholder=""
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={data.password}
+                  onChange={handleChange}
                 />
               </label>
             </div>
-
-            <div className="bg-transparent border justify-end items-end w-fit ml-auto mt-6 px-7 py-2 rounded-xl cursor-pointer hover:scale-[1.03] duration-300 text-white">
-              <button type="button" onClick={handleLogin}>
+            {error && <div className="text-red-600 mt-3">{error}</div>}
+            {loading && <span className="loading loading-dots items-center loading-lg bg-gray-500 ml-auto mt-3"></span>}
+            {!loading &&<div className="bg-transparent border justify-end items-end w-fit ml-auto mt-6 px-7 py-2 rounded-xl cursor-pointer hover:scale-[1.03] duration-300 text-white"onClick={handleSubmit}>
+              <button type="button" >
                 Sign up
               </button>
-            </div>
+            </div>}
             <div
               className="ml-auto mt-5 text-white cursor-pointer"
               onClick={() => {

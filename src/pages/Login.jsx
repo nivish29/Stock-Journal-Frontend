@@ -1,20 +1,47 @@
 import { useState } from "react";
 import authPageImg from "./../assets/authPage_img.jpg";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    //   const userData = { username, role: 'user' };
-    //   onLogin(userData);
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = ({ currentTarget: input }) => {
+    setData({ ...data, [input.name]: input.value });
+  };
+  const [error, setError] = useState("");
+  const handleSubmit = async (e) => {
+    // console.log('nihal')
+    // console.log(data)
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const url =
+        "https://stock-journal-backend.onrender.com/api/journal/auth/login";
+      const { data: res } = await axios.post(url, data);
+      localStorage.setItem("token", res.data);
+      navigate("/");
+      console.log(res.message);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+      if (e.response && e.response.status >= 400 && e.response.status <= 500) {
+        setError(e.response.data.message);
+      }
+    }
   };
 
   return (
     <div className="overflow-y-hidden">
-      <div className="h-[100vh] bg-cover items-center flex bg-stock-bg  overflow-y-auto ">
+      <div className="h-screen bg-cover items-center flex bg-stock-bg  overflow-y-auto">
         <div className="flex justify-around w-full px-20">
           <div className="flex flex-col mt-auto mb-auto text-white">
             <h1 className="font-bold text-7xl tracking-wide">InvestLog</h1>
@@ -35,16 +62,17 @@ export const Login = () => {
               Unlock your financial journey – Log your stocks, track your
               success!
             </div>
-            <form className="m-auto flex flex-col">
+            <form className="m-auto flex flex-col" onSubmit={handleSubmit}>
               <div className="flex border-b border-white mt-8 text-white">
                 <label className="flex w-full font-thin text-[18px]">
                   Email:
                   <input
                     className="outline-none font-normal pl-2 pb-2 bg-transparent"
                     type="text"
+                    name="email"
                     placeholder=""
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={data.email}
+                    onChange={handleChange}
                   />
                 </label>
               </div>
@@ -55,18 +83,26 @@ export const Login = () => {
                   <input
                     className="outline-none font-normal pl-2 pb-2 bg-transparent"
                     type="text"
+                    name="password"
                     placeholder=""
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={data.password}
+                    onChange={handleChange}
                   />
                 </label>
               </div>
               <br />
-              <div className="bg-transparent border justify-end items-end w-fit ml-auto mt-6 px-7 py-2 rounded-xl cursor-pointer hover:scale-[1.03] duration-300 text-white">
-                <button type="button" onClick={handleLogin}>
-                  Login
-                </button>
-              </div>
+              {error && <div className="text-red-500">{error}</div>}
+              {loading && (
+                <span className="loading loading-dots items-center loading-sm bg-gray-500 ml-auto mt-6 px-7 py-2"></span>
+              )}
+              {!loading && (
+                <div
+                  className="bg-transparent border justify-end items-end w-fit ml-auto mt-6 px-7 py-2 rounded-xl cursor-pointer hover:scale-[1.03] duration-300 text-white"
+                  onClick={handleSubmit}
+                >
+                  <button type="button">Login</button>
+                </div>
+              )}
               <div
                 className="ml-auto mt-5 text-white cursor-pointer"
                 onClick={() => {

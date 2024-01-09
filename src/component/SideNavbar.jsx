@@ -2,7 +2,8 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import history from "./../assets/history_icon.svg";
 import { useState } from "react";
 import stock from "./../assets/stock_icon.svg";
-import tvIcon from "./../assets/tradingview_icon.svg";
+import tvIcon from "./../assets/tv_icon.svg";
+import logoutIcon from "./../assets/logout_icon.svg";
 import homeIcon from "./../assets/home_icon.svg";
 import { useNavigate } from "react-router-dom";
 
@@ -71,7 +72,8 @@ const navigate= useNavigate();
         </div>
         <div
           className={`flex items-center gap-x-4 ml-5 duration-300 ${
-            open ? "mt-5" : "mt-5"
+            open ? "mt-5" : 
+            "mt-5"
           }`}
         >
           <img
@@ -82,7 +84,7 @@ const navigate= useNavigate();
           <a
             className={`text-black text-[16px] font-normal tracking-wide origin-left duration-300 ${
               !open && "scale-0"
-            } cursor-pointer hover:scale-105`}
+            }  cursor-pointer hover:scale-105`}
             href="https://in.tradingview.com/chart/YibKLWZp/"
             target="_blank"
             rel="noreferrer"
@@ -90,6 +92,7 @@ const navigate= useNavigate();
             TradingView
           </a>
         </div>
+        
       </div>
       {open ? (
         <GrFormPrevious
