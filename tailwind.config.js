@@ -11,6 +11,17 @@ export default {
         "between-lg-md": { min: "1024px", max: "1270px" },
         "between-md-sm": { min: "768px", max: "1024px" },
       },
+      backgroundImage: {
+        'stock-bg': "url('/src/assets/authPage_img.jpg')",
+        'stock-bg2': "url('/src/assets/authPage_img2.jpg')",
+      },
+      backgroundSize: {
+        'auto': 'auto',
+        'cover': 'cover',
+        'contain': 'contain',
+        '50%': '50%',
+        '16': '4rem',
+      },
     },
   },
   plugins: [require("tailwind-scrollbar-hide"), require("daisyui")],
