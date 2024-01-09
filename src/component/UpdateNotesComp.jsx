@@ -129,8 +129,9 @@ export const UpdateNoteComp = ({ today, setToday, currentDate }) => {
 
   const updateJournal = async () => {
     try {
+        console.log('nihal')
       const response = await axios.put(
-        `https://stock-journal-backend.onrender.com/api/journal/updateJournalEntry?id=${editData._id}`,
+        `https://stock-journal-backend.onrender.com/api/journal/updateJournalEntry?id=${editData.entry._id}`,
         {
           // Replace with the actual ID of the journal entry
           Title: title,
@@ -143,6 +144,7 @@ export const UpdateNoteComp = ({ today, setToday, currentDate }) => {
 
       setStatus(response.data.status);
       setResponseMessage(response.data.message);
+      document.getElementById("my_modal_3").close();
     } catch (error) {
       console.error("Error updating journal entry:", error);
       setStatus(0);
