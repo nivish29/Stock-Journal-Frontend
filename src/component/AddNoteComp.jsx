@@ -169,9 +169,9 @@ export const AddNoteComp = ({ today, setToday, currentDate }) => {
   }, [title, tag, content, link]);
 
 
-  const location = useLocation();
-  const editData = location.state.editData;
-  console.log(editData)
+  // const location = useLocation();
+  // const editData = location.state.editData;
+  // console.log(editData)
 
   return (
     <div className="">
