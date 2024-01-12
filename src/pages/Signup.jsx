@@ -100,7 +100,7 @@ export const SignUp = () => {
                   </label>
                 </div>
 
-                <div className="flex border-b border-white mt-8 text-white">
+                <div className="flex border-b border-white mt-8 text-white bg-transparent">
                   <label className="flex w-full font-thin text-[18px]">
                     Email:
                     <input
@@ -113,7 +113,7 @@ export const SignUp = () => {
                     />
                   </label>
                 </div>
-                <div className="flex border-b border-white mt-8 text-white">
+                <div className="flex border-b border-white mt-8 text-white bg-transparent">
                   <label className="flex w-full font-thin text-[18px]">
                     Password:
                     <input
