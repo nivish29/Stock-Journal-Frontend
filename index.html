@@ -1,13 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading...</title>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/cjs/index.min.js"></script>
+  <script>
+    function updateDocumentTitle() {
+      var token = localStorage.getItem("token");
+      var decodedToken = null;
+
+      if (token) {
+        try {
+          decodedToken = jwtDecode(token);
+          console.log("Decoded Token:", decodedToken); // Log the decoded token
+        } catch (error) {
+          console.error("Error decoding token:", error);
+        }
+      }
+
+      // Set the document title based on the first name or default to "Journal"
+      document.title = decodedToken ? `${decodedToken.firstName}'s Journal` : "Journal";
+    }
+
+    // Initial update
+    updateDocumentTitle();
+
+    // Periodically check for changes in the token (every 2 seconds in this example)
+    setInterval(updateDocumentTitle, 1500);
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>
