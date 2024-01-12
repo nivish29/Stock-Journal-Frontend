@@ -114,7 +114,7 @@ export const SignUp = () => {
                   </label>
                 </div>
                 <div className="flex border-b border-white mt-8 text-white bg-transparent">
-                  <label className="flex w-full font-thin text-[18px]">
+                  <label className="flex w-full font-thin text-[18px] bg-transparent">
                     Password:
                     <input
                       className="outline-none font-normal pl-2 pb-2 bg-transparent"
