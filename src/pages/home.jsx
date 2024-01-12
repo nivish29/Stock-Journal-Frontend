@@ -56,7 +56,7 @@ function Home() {
           />
           <a
             className={`text-black text-[16px] font-normal pl-2 tracking-wide origin-left `}
-            href="https://in.tradingview.com/chart/YibKLWZp/"
+            // href="https://in.tradingview.com/chart/YibKLWZp/"
             target="_blank"
             rel="noreferrer"
           >

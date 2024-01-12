@@ -95,7 +95,7 @@ export const Login = () => {
                     Password:
                     <input
                       className="outline-none font-normal pl-2 pb-2 bg-transparent"
-                      type="text"
+                      type="password"
                       name="password"
                       placeholder=""
                       value={data.password}
