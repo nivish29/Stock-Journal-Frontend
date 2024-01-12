@@ -1,38 +1,37 @@
 import { useState } from "react";
-import authPageImg from "./../assets/authPage_img.jpg";
+import authPageImg from "../../assets/authPage_img.jpg";
 import { useNavigate } from "react-router-dom";
+import "./css/auth.css"
 import axios from "axios";
 
-export const Login = () => {
+export const SignUp = () => {
+  //   const [username, setUsername] = useState("");
+  //   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const [data, setData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
-
   const [loading, setLoading] = useState(false);
-
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
   };
   const [error, setError] = useState("");
   const handleSubmit = async (e) => {
-    // console.log('nihal')
-    // console.log(data)
     e.preventDefault();
     try {
       setLoading(true);
       const url =
-        "https://stock-journal-backend.onrender.com/api/journal/auth/login";
+        "https://stock-journal-backend.onrender.com/api/journal/auth/signup";
       const { data: res } = await axios.post(url, data);
-      localStorage.setItem("token", res.data);
       navigate("/");
       console.log(res.message);
       setLoading(false);
     } catch (e) {
       setLoading(false);
-      console.log(e);
       if (e.response && e.response.status >= 400 && e.response.status <= 500) {
         setError(e.response.data.message);
       }
@@ -62,10 +61,10 @@ export const Login = () => {
             </h1>
           </div>
           <div className="flex items-center justify-center h-screen">
-            <div className="bg-white w-fit  h-fit justify-center  items-center py-14 px-12  rounded-3xl shadow-2xl bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-10">
+            <div className="bg-white w-fit  h-fit justify-center  items-center py-10 px-12  rounded-3xl shadow-2xl bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-10">
               {/* <div className="bg-white w-fit   items-center ml-auto py-16 px-12  rounded-3xl shadow-2xl mx-16 bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-10"> */}
               <h1 className="text-[42px] tracking-wider font-bold text-stone-400 ">
-                Login
+                Sign up
               </h1>
               <div className="text-[17px] py-4 font-thin w-[25rem] text-stone-200">
                 Unlock your financial journey – Log your stocks, track your
@@ -75,9 +74,34 @@ export const Login = () => {
                 className="m-auto flex flex-col overflow-hidden  overflow-y-auto h-[75%] scrollbar-hide"
                 onSubmit={handleSubmit}
               >
-        
-
+                <div className="flex border-b border-white mt-5 text-white">
+                  <label className="flex w-full font-thin text-[18px]">
+                    First Name:
+                    <input
+                      className="outline-none font-normal pl-2 pb-2 bg-transparent"
+                      type="text"
+                      name="firstName"
+                      placeholder=""
+                      value={data.firstName}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </div>
                 <div className="flex border-b border-white mt-8 text-white">
+                  <label className="flex w-full font-thin text-[18px]">
+                    Last Name:
+                    <input
+                      className="outline-none font-normal pl-2 pb-2 bg-transparent"
+                      type="text"
+                      name="lastName"
+                      placeholder=""
+                      value={data.lastName}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </div>
+
+                <div className="flex border-b border-white mt-8 text-white bg-transparent">
                   <label className="flex w-full font-thin text-[18px]">
                     Email:
                     <input
@@ -90,8 +114,8 @@ export const Login = () => {
                     />
                   </label>
                 </div>
-                <div className="flex border-b border-white mt-8 text-white">
-                  <label className="flex w-full font-thin text-[18px]">
+                <div className="flex border-b border-white mt-8 text-white bg-transparent">
+                  <label className="flex w-full font-thin text-[18px] bg-transparent">
                     Password:
                     <input
                       className="outline-none font-normal pl-2 pb-2 bg-transparent"
@@ -109,20 +133,20 @@ export const Login = () => {
                 )}
                 {!loading && (
                   <div
-                    className="bg-transparent border justify-end items-end w-fit mr-1 ml-auto mt-6 px-7 py-2 rounded-xl cursor-pointer hover:scale-[1.03] duration-300 text-white"
+                    className="bg-transparent border justify-end items-end w-fit ml-auto mt-6 px-7 py-2 rounded-xl cursor-pointer hover:scale-[1.03] duration-300 text-white"
                     onClick={handleSubmit}
                   >
-                    <button type="button">Login</button>
+                    <button type="button">Sign up</button>
                   </div>
                 )}
                 <div
-                  className="ml-auto my-5 text-white cursor-pointer"
+                  className="ml-auto mt-5 text-white cursor-pointer"
                   onClick={() => {
-                    navigate("/signup");
+                    navigate("/");
                   }}
                 >
-                  Don't have an account?{" "}
-                  <span className="text-blue-700 font-[500]">Sign Up</span>
+                  Already have an account?{" "}
+                  <span className="text-blue-700 font-[500]">Login</span>
                 </div>
               </form>
             </div>

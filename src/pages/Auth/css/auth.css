@@ -1,0 +1,18 @@
+input:-webkit-autofill {
+  background-color: transparent !important;
+}
+  
+  /* To address autofill on select elements */
+  select:-webkit-autofill {
+    background-color: transparent !important;
+    /* Add other styles as needed */
+  }
+  
+  /* To address autofill on textarea elements */
+  textarea:-webkit-autofill {
+    background-color: transparent !important;
+    /* Add other styles as needed */
+  }
+  .my-form input:-webkit-autofill {
+    background-color: transparent !important;
+  }

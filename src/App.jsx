@@ -6,8 +6,8 @@ import { AddLogs } from "./pages/AddLogs";
 import { Logs } from "./pages/Logs";
 import { ShowNote } from "./pages/ShowNotes";
 import { AddNotes } from "./pages/AddNotes";
-import { Login } from "./pages/Login";
-import { SignUp } from "./pages/Signup";
+import { Login } from "./pages/Auth/Login";
+import { SignUp } from "./pages/Auth/Signup";
 import { UpdateNotes } from "./pages/UpdateNotes";
 import { UpdateLogs } from "./pages/UpdateLogs";
 
